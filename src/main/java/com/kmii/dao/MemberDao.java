@@ -39,6 +39,7 @@ public class MemberDao {
 			conn = DriverManager.getConnection(url, userName, password);
 			
 			pstmt = conn.prepareStatement(sql);
+			
 			pstmt.setString(1, memberDto.getMemberid()); 
 			pstmt.setString(2, memberDto.getMemberpw()); 
 			pstmt.setString(3, memberDto.getMembername()); 
@@ -183,7 +184,7 @@ public class MemberDao {
 
 	
 	public int deleteId(String id) {
-		String sql = "SELECT * FROM membertbl WHERE memberid = ?";
+		String sql = "DELETE FROM membertbl WHERE memberid = ?";
 		
 		int result = 0;
 		
