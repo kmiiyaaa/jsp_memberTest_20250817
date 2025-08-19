@@ -26,7 +26,13 @@
 			out.println("<script>alert('회원 로그인 실패');history.go(-1);</script>");
 		}
 		
-	%>
+		%>
+		
+		<h3><a href="modifyMember.jsp">회원 정보 수정 바로가기</a></h3>
+		
+		
+		
+
 
 
 </body>

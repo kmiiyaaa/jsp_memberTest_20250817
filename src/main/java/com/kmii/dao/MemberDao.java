@@ -27,6 +27,8 @@ public class MemberDao {
 	public static final int MEMBER_ID_NONE = 0;
 	public static final int MEMBER_DELETE_OK = 1;
 	public static final int MEMBER_DELETE_NO = 0;
+	public static final int MEMBER_UPDATE_SUCCESS = 1;
+	public static final int MEMBER_UPDATE_FAIL = 0;
 	
 	public int insertMember(MemberDto memberDto) {  // 회원 가입 메서드, ()안에 매개변수 잊지말기
 		
@@ -200,7 +202,6 @@ public class MemberDao {
 			
 			
 			
-			
 		} catch (Exception e) {
 			System.out.println("db 에러 발생, 로그인 체크 실패!"); 
 			e.printStackTrace();  //에러 내용 출력
@@ -231,6 +232,113 @@ public class MemberDao {
 		//return result;  // 1로 반환되면 아이디 탈퇴 가능. 0은 불가능
 		
 	}
+	
+	public MemberDto getMemberInfo(String memberid) {   // 아이디 넣으면 그 아이디로 검색해서 id,pw,name .. 통째로 반환 -> int아닌 dto로 받아준다 
+		
+	String sql = "SELECT * FROM membertbl WHERE memberid =?";
+	MemberDto memberDto = new MemberDto();
+	
+	
+	try {
+		Class.forName(driverName); 
+		conn = DriverManager.getConnection(url, userName, password);
+		
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, memberid); 
+		
+		rs = pstmt.executeQuery();
+		
+		if(rs.next()) {    // 여기구문 이해 잘 하기
+			memberDto.setMemberid(rs.getString("memberid"));
+			memberDto.setMemberpw(rs.getString("memberpw"));
+			memberDto.setMembername(rs.getString("membername"));
+			memberDto.setMemberage(rs.getInt("memberage"));
+			memberDto.setMemberemail(rs.getString("memberemail"));
+			memberDto.setMemberdate(rs.getString("memberdate"));
+			
+		}
+		
+		
+	} catch (Exception e) {
+		System.out.println("db 에러 발생!"); 
+		e.printStackTrace();  //에러 내용 출력
+		
+	} finally {  // finally : 에러 유무와 상관없이 무조건 실행할 내용 입력 -> 여기선 에러와 상관없이 커넥션 닫기
+		try {
+			if(rs != null){  
+				rs.close();
+			}
+			
+			if(pstmt != null){  // stmt가 null이 아니면 닫기 --- conn보다 먼저 닫아야한다
+				pstmt.close();
+			}
+			
+			if(conn != null) {  // 커넥션이 null값이 아닐때만 닫기
+				conn.close();
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+		
+	return memberDto;
+	}
+	
+	
+	public int updateMember(String memberid, String memberpw, String membername, int memberage, String memberemail) {   // select문 제외한 나머지는 거의 int 이고 아니면 void //  select는 값에 따라 다양
+		
+		String sql ="UPDATE membertbl SET memberpw=?, membername=?, memberage =?, memberemail=? WHERE memberid=?";
+		int result = 0;
+		
+		
+		try {
+			Class.forName(driverName); 
+			conn = DriverManager.getConnection(url, userName, password);
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, memberpw);
+			pstmt.setInt(2, memberage); 
+			pstmt.setString(3, membername); 
+			pstmt.setString(4, memberemail); 
+			pstmt.setString(5, memberid); 
+			
+		
+			result = pstmt.executeUpdate();  
+			
+			
+			
+		} catch (Exception e) {
+			System.out.println("db 에러 발생, 회원정보 수정 실패!"); 
+			e.printStackTrace();  //에러 내용 출력
+			
+		} finally {  // finally : 에러 유무와 상관없이 무조건 실행할 내용 입력 -> 여기선 에러와 상관없이 커넥션 닫기
+			try {
+				
+				
+				if(pstmt != null){  // stmt가 null이 아니면 닫기 --- conn보다 먼저 닫아야한다
+					pstmt.close();
+				}
+				
+				if(conn != null) {  // 커넥션이 null값이 아닐때만 닫기
+					conn.close();
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+			
+		
+		if(result ==1) {
+			return MEMBER_UPDATE_SUCCESS;
+		} else {
+			return MEMBER_UPDATE_FAIL;
+		}
+		
+	}
+	
+	
+	
+	
 	
 	
 }
