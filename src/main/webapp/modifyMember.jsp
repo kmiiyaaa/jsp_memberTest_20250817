@@ -17,8 +17,11 @@
 				out.println("<script>alert(로그인 하지 않은 유저는 수정 페이지 접근 불가);window.location.href='loginMember.jsp';</script>");   //window.location.href="" : 특정페이지 이동
 			} else {
 	
-			MemberDao memberDao = new MemberDao();
-			MemberDto memberDto =	memberDao.getMemberInfo((String)session.getAttribute("sessionId"));   // 중요! - 이해하기
+				MemberDao memberDao = new MemberDao();
+				// MemberDto memberDto =	memberDao.getMemberInfo((String)session.getAttribute("sessionId"));   // 중요! - 이해하기
+			
+		
+			MemberDto memberDto = memberDao.getMemberInfo(sid);
 			
 			request.setAttribute("memberDto", memberDto);
 	
