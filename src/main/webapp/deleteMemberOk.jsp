@@ -12,10 +12,11 @@
 </head>
 <body>
 <% 
-			MemberDao memberDao = new MemberDao();
+			// String mid = request.getParameter("deletedid");  위에 usebean안썼을때 
 
+			MemberDao memberDao = new MemberDao();
 			int idDelete = memberDao.deleteId(request.getParameter("deletedid"));
-		
+			// int idDelete = memberDao.deleteId(mid); 위에 usebean안썼을때 
 		
 			if(idDelete == MemberDao.MEMBER_DELETE_OK) {
 				out.println("<script>alert('아이디  삭제 성공');</script>");

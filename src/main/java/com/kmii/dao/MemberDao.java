@@ -222,7 +222,13 @@ public class MemberDao {
 		}
 			
 		
-		return result;  // 1로 반환되면 아이디 탈퇴 가능. 0은 불가능
+		if(result ==1) {
+			return MEMBER_DELETE_OK;
+		} else {
+			return MEMBER_DELETE_NO;
+		}
+		
+		//return result;  // 1로 반환되면 아이디 탈퇴 가능. 0은 불가능
 		
 	}
 	
